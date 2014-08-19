@@ -232,10 +232,14 @@ class StatementDelegator extends Statement
 	 */
 	public function execute()
 	{
-		$this->parameters = func_get_args();
 		$this->timeStart  = microtime(true);
 		$result           = $this->wrapResult($this->invoke(__FUNCTION__, func_get_args()));
 		$this->timeStop   = microtime(true);
+		$this->parameters = func_get_args();
+		if ((count($this->parameters) == 1) && is_array($this->parameters[0]))
+		{
+			$this->parameters = $this->parameters[0];
+		}
 
 		$this->passToDebugger($result);
 
