@@ -58,7 +58,11 @@ class DebugBar extends \DebugBar\DebugBar
 
 		foreach ($GLOBALS['debugger-panels'] as $panelFunc)
 		{
-			$this->addCollector($panelFunc($this));
+			$collector = $panelFunc($this);
+			if ($collector)
+			{
+				$this->addCollector($collector);
+			}
 		}
 	}
 
