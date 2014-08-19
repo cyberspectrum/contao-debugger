@@ -13,7 +13,6 @@
 
 namespace CyberSpectrum\ContaoDebugger\DebugBar;
 
-use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoAutoloaderCollector;
 use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
@@ -40,12 +39,11 @@ class DebugBar extends \DebugBar\DebugBar
 	{
 		$time = new TimeDataCollector(DEBUG_START);
 		$time->startMeasure('Debugger active.');
-		$autoloader = new ContaoAutoloaderCollector();
-		$messages   = new MessagesCollector();
-		$phpInfo    = new PhpInfoCollector();
-		$request    = new RequestDataCollector();
-		$memory     = new MemoryCollector();
-		$exception  = new ExceptionsCollector();
+		$messages  = new MessagesCollector();
+		$phpInfo   = new PhpInfoCollector();
+		$request   = new RequestDataCollector();
+		$memory    = new MemoryCollector();
+		$exception = new ExceptionsCollector();
 
 		$this
 			->addCollector($messages)
@@ -53,8 +51,7 @@ class DebugBar extends \DebugBar\DebugBar
 			->addCollector($phpInfo)
 			->addCollector($request)
 			->addCollector($memory)
-			->addCollector($exception)
-			->addCollector($autoloader);
+			->addCollector($exception);
 
 		foreach ($GLOBALS['debugger-panels'] as $panelFunc)
 		{

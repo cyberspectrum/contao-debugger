@@ -27,6 +27,25 @@ $GLOBALS['debugger-panels']['database'] = function($debugger)
 };
 
 
+$GLOBALS['debugger-panels']['contao-autoloader'] = function($debugger)
+{
+	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+	$debugger->registerStopFunction(function($debugger)
+		{
+			/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+			if ($debugger->hasCollector('contao-autoloader') && $autoLoader = $debugger->getCollector('contao-autoloader'))
+			{
+				/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoAutoloaderCollector $autoLoader */
+				$autoLoader->stop();
+			}
+		}
+	);
+	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoAutoloaderCollector();
+};
+
+
+
 if (defined('CONTAO_DEBUGGER_DEBUG_PROFILING') && CONTAO_DEBUGGER_DEBUG_PROFILING)
 {
 	$GLOBALS['debugger-panels']['benchmark'] = function($debugger)
