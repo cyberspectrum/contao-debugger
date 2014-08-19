@@ -15,7 +15,6 @@ namespace CyberSpectrum\ContaoDebugger;
 
 use ContaoCommunityAlliance\Contao\EventDispatcher\Event\CreateEventDispatcherEvent;
 use CyberSpectrum\ContaoDebugger\Database\DatabaseDebugger;
-use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\BenchmarkCollector;
 use CyberSpectrum\ContaoDebugger\DebugBar\DebugBar;
 use CyberSpectrum\ContaoDebugger\Exception\ExceptionHandler;
 use CyberSpectrum\ContaoDebugger\Exception\PostMortemException;
@@ -152,11 +151,6 @@ class Debugger
 	{
 		self::$debuggerDone = true;
 
-		if (self::getDebugger()->hasCollector('benchmark') && $benchmark = self::getHandler('benchmark'))
-		{
-			/** @var BenchmarkCollector $benchmark */
-			$benchmark->stopProfiling();
-		}
 		self::getDebugger()->stopCollectors();
 	}
 

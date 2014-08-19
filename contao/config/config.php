@@ -25,4 +25,25 @@ $GLOBALS['debugger-panels']['database'] = function($debugger)
 	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoSQLCollector($debugger['time']);
 };
 
+
+if (defined('CONTAO_DEBUGGER_DEBUG_PROFILING') && CONTAO_DEBUGGER_DEBUG_PROFILING)
+{
+	$GLOBALS['debugger-panels']['benchmark'] = function($debugger)
+	{
+		/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+		$debugger->registerStopFunction(function($debugger)
+			{
+				/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+				if ($debugger->hasCollector('benchmark') && $benchmark = $debugger->getCollector('benchmark'))
+				{
+					/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\BenchmarkCollector $benchmark */
+					$benchmark->stopProfiling();
+				}
+			}
+		);
+
+		return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\BenchmarkCollector();
+	};
+}
+
 $GLOBALS['debugger'] = CyberSpectrum\ContaoDebugger\Debugger::boot();

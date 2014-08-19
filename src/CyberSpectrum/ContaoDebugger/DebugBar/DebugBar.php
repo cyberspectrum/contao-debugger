@@ -13,7 +13,6 @@
 
 namespace CyberSpectrum\ContaoDebugger\DebugBar;
 
-use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\BenchmarkCollector;
 use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoAutoloaderCollector;
 use DebugBar\DataCollector\ExceptionsCollector;
 use DebugBar\DataCollector\MemoryCollector;
@@ -60,11 +59,6 @@ class DebugBar extends \DebugBar\DebugBar
 		foreach ($GLOBALS['debugger-panels'] as $panelFunc)
 		{
 			$this->addCollector($panelFunc($this));
-		}
-
-		if (defined('CONTAO_DEBUGGER_DEBUG_PROFILING') && CONTAO_DEBUGGER_DEBUG_PROFILING)
-		{
-			$this->addCollector(new BenchmarkCollector());
 		}
 	}
 
