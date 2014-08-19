@@ -28,14 +28,37 @@ class ContaoAutoloaderCollector extends MessagesCollector
 		parent::__construct('contao-autoloader');
 
 		// We need the debug mode as otherwise the \ClassLoader will not log.
+		$this->setDebugMode(true);
+	}
+
+	/**
+	 * Enable or disable the debug mode.
+	 *
+	 * @param bool $state True to enable, false to disable.
+	 *
+	 * @return void
+	 */
+	protected function setDebugMode($state)
+	{
+		// We need the debug mode as otherwise the \ClassLoader will not log.
 		if (version_compare(VERSION, '3.3', '<'))
 		{
-			$GLOBALS['TL_CONFIG']['debugMode'] = true;
+			$GLOBALS['TL_CONFIG']['less debugMode'] = $state;
 		}
 		else
 		{
-			\Config::set('debugMode', true);
+			\Config::set('debugMode', $state);
 		}
+	}
+
+	/**
+	 * Disable the debug mode.
+	 *
+	 * @return void
+	 */
+	public function stop()
+	{
+		$this->setDebugMode(false);
 	}
 
 	/**
