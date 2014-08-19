@@ -29,29 +29,6 @@ class EventDispatcherCollector extends MessagesCollector
 	}
 
 	/**
-	 * Adds a message.
-	 *
-	 * A message can be anything from an object to a string.
-	 *
-	 * @param mixed  $message The message.
-	 *
-	 * @param string $label   The optional label.
-	 *
-	 * @return void
-	 */
-	public function addMessage($message, $label = 'info')
-	{
-		$this->messages[] = array(
-			// @codingStandardsIgnoreStart -- print_r is intentional here.
-			'message'   => print_r($message, true),
-			// @codingStandardsIgnoreEnd
-			'is_string' => is_string($message),
-			'label'     => $label,
-			'time'      => microtime(true)
-		);
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function getMessages()
