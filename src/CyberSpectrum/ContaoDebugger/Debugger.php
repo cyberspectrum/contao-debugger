@@ -396,7 +396,7 @@ select.phpdebugbar-datasets-switcher {
 	 *
 	 * @return string
 	 */
-	public function handleOutput($strBuffer)
+	public static function handleOutput($strBuffer)
 	{
 		self::markDone();
 
@@ -413,9 +413,10 @@ select.phpdebugbar-datasets-switcher {
 			return $strBuffer;
 		}
 
-		$scripts   = $this->generateScripts();
-		$strBuffer = str_replace('<head>', '<head>' . $scripts['css'] . $scripts['script'], $strBuffer);
-		$strBuffer = str_replace('</body>', $this->generateOutput() . '</body>', $strBuffer);
+		$scripts   = self::generateScripts();
+		$strBuffer = str_replace('<head>', $scripts['script'] . '<head>', $strBuffer);
+		$strBuffer = str_replace('</head>', $scripts['css'] . '</head>', $strBuffer);
+		$strBuffer = str_replace('</body>', self::generateOutput() . '</body>', $strBuffer);
 
 		return $strBuffer;
 	}
