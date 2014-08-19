@@ -20,7 +20,8 @@ use CyberSpectrum\ContaoDebugger\DebugBar\DebugBar;
 use CyberSpectrum\ContaoDebugger\Exception\ExceptionHandler;
 use CyberSpectrum\ContaoDebugger\Exception\PostMortemException;
 use DebugBar\DataCollector\ExceptionsCollector;
-use DebugBar\JavascriptRenderer;
+use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\OpenHandler;
 use DebugBar\Storage\FileStorage;
 
@@ -29,20 +30,6 @@ use DebugBar\Storage\FileStorage;
  */
 class Debugger
 {
-	/**
-	 * The debug bar.
-	 *
-	 * @var DebugBar
-	 */
-	protected static $debugBar;
-
-	/**
-	 * The javascript renderer.
-	 *
-	 * @var JavascriptRenderer
-	 */
-	protected static $debugBarRenderer;
-
 	/**
 	 * Logic flag if debug data has already been sent.
 	 *
@@ -116,15 +103,14 @@ class Debugger
 		{
 			mkdir(TL_ROOT . '/system/tmp/debug.log', 0777, true);
 		}
-		self::$debugBar = new DebugBar();
-		self::$debugBar->setStorage(new FileStorage(TL_ROOT . '/system/tmp/debug.log'));
+		$debugBar = new DebugBar();
+		$debugBar->setStorage(new FileStorage(TL_ROOT . '/system/tmp/debug.log'));
 
-		self::$debugBarRenderer = self::$debugBar->getJavascriptRenderer();
-		self::$debugBarRenderer->setOpenHandlerUrl(TL_PATH . '/system/modules/debug/data/retrieve.php');
+		$debugBar->getJavascriptRenderer()->setOpenHandlerUrl(TL_PATH . '/system/modules/debug/data/retrieve.php');
 
 		register_shutdown_function(array(__CLASS__, 'postMortem'));
 
-		return self::$debugBar;
+		return $debugBar;
 	}
 
 	/**
@@ -166,7 +152,7 @@ class Debugger
 	{
 		self::$debuggerDone = true;
 
-		if (self::$debugBar->hasCollector('benchmark') && $benchmark = self::$debugBar['benchmark'])
+		if (self::getDebugger()->hasCollector('benchmark') && $benchmark = self::getHandler('benchmark'))
 		{
 			/** @var BenchmarkCollector $benchmark */
 			$benchmark->stopProfiling();
@@ -208,7 +194,12 @@ class Debugger
 	 */
 	public static function startMeasure($message, $label = null)
 	{
-		self::$debugBar['time']->startMeasure($message, $label);
+		/** @var TimeDataCollector $time */
+		$time = self::getHandler('time');
+		if ($time)
+		{
+			$time->startMeasure($message, $label);
+		}
 	}
 
 	/**
@@ -220,7 +211,12 @@ class Debugger
 	 */
 	public static function stopMeasure($message)
 	{
-		self::$debugBar['time']->stopMeasure($message);
+		/** @var TimeDataCollector $time */
+		$time = self::getHandler('time');
+		if ($time)
+		{
+			$time->stopMeasure($message);
+		}
 	}
 
 	/**
@@ -234,7 +230,25 @@ class Debugger
 	 */
 	public static function addDebug($message, $label = 'info')
 	{
-		self::$debugBar['messages']->addMessage($message, $label);
+		/** @var MessagesCollector $messages */
+		$messages = self::getHandler('messages');
+		if ($messages)
+		{
+			$messages->addMessage($message, $label);
+		}
+	}
+
+	/**
+	 * Retrieve the debugger instance.
+	 *
+	 * @return DebugBar
+	 */
+	public static function getDebugger()
+	{
+		/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugBar */
+		$debugBar = $GLOBALS['debugger'];
+
+		return $debugBar;
 	}
 
 	/**
@@ -242,11 +256,17 @@ class Debugger
 	 *
 	 * @param string $name The name of the log sing.
 	 *
-	 * @return \DebugBar\DataCollector\DataCollectorInterface
+	 * @return \DebugBar\DataCollector\DataCollectorInterface|null
 	 */
 	public static function getHandler($name)
 	{
-		return self::$debugBar[$name];
+		$debugBar = self::getDebugger();
+		if (!$debugBar)
+		{
+			return null;
+		}
+
+		return $debugBar[$name];
 	}
 
 	/**
@@ -256,8 +276,9 @@ class Debugger
 	 */
 	protected static function generateOutput()
 	{
-		self::$debugBar->sendDataInHeaders(true);
-		return self::$debugBarRenderer->render(!self::isAjax());
+		$debugBar = self::getDebugger();
+		$debugBar->sendDataInHeaders(true);
+		return $debugBar->getJavascriptRenderer()->render(!self::isAjax());
 	}
 
 	/**
@@ -268,7 +289,7 @@ class Debugger
 	public static function getPersisted()
 	{
 		self::markDone();
-		$openHandler = new OpenHandler(self::$debugBar);
+		$openHandler = new OpenHandler(self::getDebugger());
 		$openHandler->handle();
 	}
 
@@ -282,10 +303,13 @@ class Debugger
 	public static function generateAsset($type)
 	{
 		self::markDone();
-		self::$debugBarRenderer
+
+		$renderer = self::getDebugger()->getJavascriptRenderer();
+
+		$renderer
 			->setIncludeVendors(false)
 			->setEnableJqueryNoConflict();
-		list($cssFiles, $jsFiles) = self::$debugBarRenderer->getAssets();
+		list($cssFiles, $jsFiles) = $renderer->getAssets();
 
 		$content = '';
 
@@ -404,10 +428,11 @@ select.phpdebugbar-datasets-switcher,
 
 		if (self::isAjax())
 		{
-			self::$debugBar->stackData();
+			$debugBar = self::getDebugger();
+			$debugBar->stackData();
 
 			$i = 1;
-			foreach (array_keys(self::$debugBar->getStackedData()) as $id)
+			foreach (array_keys($debugBar->getStackedData()) as $id)
 			{
 				header('phpdebugbar-id-' . ($i++) . ': ' . $id);
 			}
@@ -460,7 +485,7 @@ select.phpdebugbar-datasets-switcher,
 					return;
 				}
 			}
-			self::$debugBar->stackData();
+			self::getDebugger()->stackData();
 			return;
 		}
 
