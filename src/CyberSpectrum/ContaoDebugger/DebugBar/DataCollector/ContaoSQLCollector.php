@@ -14,6 +14,7 @@
 namespace CyberSpectrum\ContaoDebugger\DebugBar\DataCollector;
 
 use CyberSpectrum\ContaoDebugger\Database\DatabaseDebugger;
+use DebugBar\DataCollector\AssetProvider;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\TimeDataCollector;
@@ -21,7 +22,7 @@ use DebugBar\DataCollector\TimeDataCollector;
 /**
  * Collects data about SQL statements executed within Contao.
  */
-class ContaoSQLCollector extends DataCollector implements Renderable
+class ContaoSQLCollector extends DataCollector implements Renderable, AssetProvider
 {
 	/**
 	 * Optional time collector.
@@ -75,7 +76,7 @@ class ContaoSQLCollector extends DataCollector implements Renderable
 			'prepared_stmt' => $stmt['query'],
 			'params'        => (object)$stmt['params'],
 			'duration'      => $stmt['duration'],
-			'duration_str'  => $this->formatDuration($stmt['duration']),
+			'duration_str'  => $this->getDataFormatter()->formatDuration($stmt['duration']),
 			'is_success'    => true,
 			'error_code'    => 0,
 			'error_message' => ''
@@ -109,7 +110,7 @@ class ContaoSQLCollector extends DataCollector implements Renderable
 			$data['accumulated_duration'] += $converted['duration'];
 		}
 
-		$data['accumulated_duration_str'] = $this->formatDuration($data['accumulated_duration']);
+		$data['accumulated_duration_str'] = $this->getDataFormatter()->formatDuration($data['accumulated_duration']);
 
 		return $data;
 	}
@@ -140,6 +141,17 @@ class ContaoSQLCollector extends DataCollector implements Renderable
 				'map'        => 'contao-sql.nb_statements',
 				'default'    => 0
 			)
+		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getAssets()
+	{
+		return array(
+			'css' => 'widgets/sqlqueries/widget.css',
+			'js' => 'widgets/sqlqueries/widget.js'
 		);
 	}
 }
