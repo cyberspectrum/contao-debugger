@@ -440,7 +440,7 @@ select.phpdebugbar-datasets-switcher,
 		if (($error = error_get_last()) !== null)
 		{
 			$e = new PostMortemException(
-				self::$arrErrors[$error['type']] . ': ' . $error['message'],
+				ExceptionHandler::getErrorName($error['type']) . ': ' . $error['message'],
 				0,
 				$error['type'],
 				$error['file'],

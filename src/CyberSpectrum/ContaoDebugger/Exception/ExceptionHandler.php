@@ -66,6 +66,22 @@ class ExceptionHandler
 	}
 
 	/**
+	 * Translate an error code into a human readable name.
+	 *
+	 * @param int $code The error code.
+	 *
+	 * @return string
+	 */
+	public static function getErrorName($code)
+	{
+		if (isset(self::$arrErrors[$code]))
+		{
+			return self::$arrErrors[$code];
+		}
+		return 'unknown error ' . $code;
+	}
+
+	/**
 	 * Error handler.
 	 *
 	 * Handle errors like PHP does it natively but additionally log them to the
@@ -105,7 +121,7 @@ class ExceptionHandler
 		}
 
 		$e = new \ErrorException(
-			self::$arrErrors[$intType] . ': ' . $strMessage,
+			self::getErrorName($intType) . ': ' . $strMessage,
 			0,
 			$intType,
 			$strFile,
@@ -116,7 +132,7 @@ class ExceptionHandler
 		{
 			// Log the error.
 			error_log(sprintf("\nPHP %s: %s in %s on line %s\n%s\n",
-				self::$arrErrors[$intType],
+				self::getErrorName($intType),
 				$strMessage,
 				$strFile,
 				$intLine,
