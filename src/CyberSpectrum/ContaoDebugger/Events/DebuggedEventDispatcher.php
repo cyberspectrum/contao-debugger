@@ -47,12 +47,17 @@ class DebuggedEventDispatcher implements EventDispatcherInterface
 	 */
 	public static function register(CreateEventDispatcherEvent $event)
 	{
+		/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugBar */
+		$debugBar = $GLOBALS['debugger'];
+		if (!$debugBar)
+		{
+			return;
+		}
+
 		$collector  = new EventDispatcherCollector();
 		$dispatcher = new DebuggedEventDispatcher($event->getEventDispatcher(), $collector);
 		$event->setEventDispatcher($dispatcher);
 
-		/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugBar */
-		$debugBar = $GLOBALS['debugger'];
 		$debugBar->addCollector($collector);
 	}
 
