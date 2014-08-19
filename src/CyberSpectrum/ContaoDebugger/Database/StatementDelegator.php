@@ -224,7 +224,7 @@ class StatementDelegator extends Statement
 	 */
 	public function limit($intRows, $intOffset = 0)
 	{
-		return $this->invoke(__FUNCTION__, func_get_args());
+		return $this->wrapResult($this->invoke(__FUNCTION__, func_get_args()));
 	}
 
 	/**
