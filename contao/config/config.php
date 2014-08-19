@@ -22,7 +22,8 @@ if (defined('CONTAO_DEBUGGER_DEBUG_EVENTS') && CONTAO_DEBUGGER_DEBUG_EVENTS)
 
 $GLOBALS['debugger-panels']['database'] = function($debugger)
 {
-	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoSQLCollector($debugger['time']);
+	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoSQLCollector($debugger->getCollector('time'));
 };
 
 
