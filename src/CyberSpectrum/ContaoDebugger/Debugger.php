@@ -449,6 +449,14 @@ select.phpdebugbar-datasets-switcher {
 
 		if (self::isAjax())
 		{
+			foreach (headers_list() as $header)
+			{
+				if (substr($header, 0, 17) == 'X-Ajax-Location: ')
+				{
+					self::handleOutput('');
+					return;
+				}
+			}
 			self::$debugBar->stackData();
 			return;
 		}
