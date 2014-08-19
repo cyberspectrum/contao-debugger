@@ -13,7 +13,7 @@
 
 namespace CyberSpectrum\ContaoDebugger\Database;
 
-use Contao\Database\Statement;
+use Database\Statement;
 use CyberSpectrum\ContaoDebugger\Debugger;
 use Database\Result;
 
