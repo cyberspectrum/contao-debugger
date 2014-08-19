@@ -131,7 +131,7 @@ class BenchmarkCollector extends DataCollector implements Renderable
 				'end'            => $measure,
 				'relative_end'   => $measure,
 				'duration'       => $measure,
-				'duration_str'   => $this->formatDuration($measure)
+				'duration_str'   => $this->getDataFormatter()->formatDuration($measure)
 			);
 
 			if ($max < $measure)
@@ -142,7 +142,7 @@ class BenchmarkCollector extends DataCollector implements Renderable
 
 		return array(
 			'duration'     => $max,
-			'overhead'     => 'Overhead: ' . $this->formatDuration($overhead),
+			'overhead'     => 'Overhead: ' . $this->getDataFormatter()->formatDuration($overhead),
 			'measures'     => array_values($measures)
 		);
 	}
