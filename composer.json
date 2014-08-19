@@ -1,0 +1,44 @@
+{
+	"name":"cyberspectrum/contao-debugger",
+	"description":"General purpose debugger integration for Contao",
+	"keywords":["contao", "debugger"],
+	"type":"contao-module",
+	"homepage":"http://www.cyberspectrum.de/",
+	"license":"LGPL-3.0+",
+	"authors": [
+		{
+			"name":"Christian Schiffler",
+			"email":"c.schiffler@cyberspectrum.de",
+			"homepage":"http://www.cyberspectrum.de",
+			"role":"Developer"
+		}
+	],
+	"require": {
+		"php":">=5.3",
+		"contao/core": ">=3.1,<=3.3",
+		"contao-community-alliance/composer-plugin": "~2.0",
+		"maximebf/debugbar": "1.9@dev"
+	},
+	"require-dev": {
+		"metamodels/php-coding-standard": "*",
+		"pdepend/pdepend": "1.1.*",
+		"phpunit/phpunit": ">=3.7.10,<4-dev",
+		"phpmd/phpmd": "1.5"
+	},
+	"autoload": {
+		"psr-0": {
+			"CyberSpectrum\\ContaoDebugger\\": "src"
+		}
+	},
+	"extra":{
+		"contao": {
+			"sources": {
+				"contao": "system/modules/debug"
+			}
+		},
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	},
+	"minimum-stability": "dev"
+}
