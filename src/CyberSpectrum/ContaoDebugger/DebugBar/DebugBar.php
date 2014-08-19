@@ -28,6 +28,13 @@ use DebugBar\DataCollector\TimeDataCollector;
 class DebugBar extends \DebugBar\DebugBar
 {
 	/**
+	 * Functions to be called when the Debugger shall not collect any data anymore.
+	 *
+	 * @var callable
+	 */
+	protected $stopFunctions = array();
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function __construct()
@@ -59,5 +66,34 @@ class DebugBar extends \DebugBar\DebugBar
 		{
 			$this->addCollector(new BenchmarkCollector());
 		}
+	}
+
+	/**
+	 * Register a method to be called when the debugger is shutting down.
+	 *
+	 * @param callable $function The function to call.
+	 *
+	 * @return DebugBar
+	 */
+	public function registerStopFunction($function)
+	{
+		$this->stopFunctions[] = $function;
+
+		return $this;
+	}
+
+	/**
+	 * Call the registered methods to advise the collectors to not accept any further data.
+	 *
+	 * @return DebugBar
+	 */
+	public function stopCollectors()
+	{
+		foreach ($this->stopFunctions as $function)
+		{
+			$function($this);
+		}
+
+		return $this;
 	}
 }

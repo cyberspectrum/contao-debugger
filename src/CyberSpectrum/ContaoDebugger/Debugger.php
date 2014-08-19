@@ -157,6 +157,7 @@ class Debugger
 			/** @var BenchmarkCollector $benchmark */
 			$benchmark->stopProfiling();
 		}
+		self::getDebugger()->stopCollectors();
 	}
 
 	/**
