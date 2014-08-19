@@ -301,7 +301,7 @@ class Debugger
 								'url(icons.png)'
 							),
 							array(
-								'url(' . TL_PATH . '/system/modules/debug/assets/php-icon.png)',
+								'url(' . TL_PATH . '/system/modules/debug/assets/logo.png)',
 								'url(' . TL_PATH . '/system/modules/debug/assets/icons.png)'
 							),
 							file_get_contents($file)
@@ -315,12 +315,14 @@ background: #efefef url(' . TL_PATH . '/system/modules/debug/assets/logo.png) no
 }
 
 /** We need to remove the stupid Contao stylect as it does NOT update. */
-select.phpdebugbar-datasets-switcher {
+select.phpdebugbar-datasets-switcher,
+.phpdebugbar-openhandler select {
 	opacity: 1 !important;
 	display: inline-block;
 }
 
-.styled_select.phpdebugbar-datasets-switcher {
+.styled_select.phpdebugbar-datasets-switcher,
+.phpdebugbar-openhandler .styled_select {
 	display: none;
 }
 ';
