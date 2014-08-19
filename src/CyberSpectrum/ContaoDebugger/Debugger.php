@@ -93,9 +93,8 @@ class Debugger
 		define('DEBUG_START', microtime(true));
 
 		array_insert($GLOBALS['TL_HOOKS']['initializeSystem'], 0, array(array(__CLASS__, 'initializeSystem')));
-
-		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleoutput');
-		$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(__CLASS__, 'handleoutput');
+		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleOutput');
+		$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(__CLASS__, 'handleOutput');
 
 		self::setMemoryLimit();
 
