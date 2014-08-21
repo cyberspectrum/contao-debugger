@@ -86,7 +86,7 @@ class ContaoAutoloaderCollector extends MessagesCollector
 
 		foreach (get_included_files() as $file)
 		{
-			$this->addMessage($file, 'includes');
+			$this->addMessage(str_replace(TL_ROOT, 'TL_ROOT', $file), 'includes');
 		}
 
 		$messages = $this->messages;
