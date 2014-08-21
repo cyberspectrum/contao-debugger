@@ -37,7 +37,7 @@ class DebugBar extends \DebugBar\DebugBar
 	 */
 	public function __construct()
 	{
-		$time = new TimeDataCollector(DEBUG_START);
+		$time = new TimeDataCollector(microtime(true));
 		$time->startMeasure('Debugger active.');
 		$messages  = new MessagesCollector();
 		$phpInfo   = new PhpInfoCollector();

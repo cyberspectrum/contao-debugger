@@ -103,7 +103,6 @@ class Debugger
 	 */
 	public static function boot()
 	{
-		define('DEBUG_START', microtime(true));
 
 		array_insert($GLOBALS['TL_HOOKS']['initializeSystem'], 0, array(array(__CLASS__, 'initializeSystem')));
 		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleOutput');
@@ -133,11 +132,6 @@ class Debugger
 	 */
 	public static function initializeSystem()
 	{
-		if (!defined('DEBUG_START'))
-		{
-			return;
-		}
-
 		/** @var ExceptionsCollector $exceptions */
 		$exceptions = self::getHandler('exceptions');
 		ExceptionHandler::attach($exceptions);
