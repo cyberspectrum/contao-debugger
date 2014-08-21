@@ -323,7 +323,7 @@ class Debugger
 	 */
 	public static function generateAsset($type)
 	{
-		$filename = '/assets/' . $type . '/contao-debug.' . $type;
+		$filename = 'assets/' . $type . '/contao-debug.' . $type;
 
 		self::markDone();
 
@@ -413,9 +413,9 @@ select.phpdebugbar-datasets-switcher,
 			default:
 		}
 
-		file_put_contents(TL_ROOT . $filename, $content);
+		file_put_contents(TL_ROOT . '/'. $filename, $content);
 
-		return TL_PATH . $filename;
+		return TL_PATH . '/' . $filename;
 	}
 
 	/**
