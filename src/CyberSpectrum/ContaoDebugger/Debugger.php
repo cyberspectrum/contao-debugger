@@ -54,12 +54,13 @@ class Debugger
 				$value = (int)$value;
 				switch ($unit)
 				{
+					/** @noinspection PhpMissingBreakStatementInspection - No break (cumulative multiplier) */
 					case 'g':
 						$value *= 1024;
-					// No break (cumulative multiplier).
+					/** @noinspection PhpMissingBreakStatementInspection - No break (cumulative multiplier) */
 					case 'm':
 						$value *= 1024;
-					// No break (cumulative multiplier).
+					/** @noinspection PhpMissingBreakStatementInspection - No break (cumulative multiplier) */
 					case 'k':
 						$value *= 1024;
 
