@@ -139,11 +139,11 @@ class Debugger
 			{
 				$collector->addMessage(
 					sprintf(
-						'Script is executed as user "%s" but the script is owned by user %s',
+						'Script is executed as user "%s" but the script is owned by user %s - This might cause problems.',
 						$processUser,
 						$scriptUser
 					),
-					'warn'
+					'warning'
 				);
 			}
 			else
