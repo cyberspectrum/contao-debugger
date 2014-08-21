@@ -355,6 +355,12 @@ class Debugger
 				}
 
 				$content .= '
+
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params th,
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
+color: #000;
+}
+
 div.phpdebugbar-header,
 a.phpdebugbar-restore-btn {
 background: #efefef url(' . TL_PATH . '/system/modules/debug/assets/logo.png) no-repeat 5px 4px;
