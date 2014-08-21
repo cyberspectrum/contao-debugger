@@ -128,6 +128,31 @@ class Debugger
 
 		register_shutdown_function(array(__CLASS__, 'postMortem'));
 
+		if (function_exists('posix_getpwuid') && function_exists('posix_geteuid') && function_exists('get_current_user'))
+		{
+			$processUser = posix_getpwuid(posix_geteuid());
+			$processUser = $processUser['name'];
+			$scriptUser  = get_current_user();
+			$collector   = $debugBar->getCollector('messages');
+			/** @var MessagesCollector $collector */
+			if ($processUser != $scriptUser)
+			{
+				$collector->addMessage(
+					sprintf(
+						'Script is executed as user "%s" but the script is owned by user %s',
+						$processUser,
+						$scriptUser
+					),
+					'warn'
+				);
+			}
+			else
+			{
+				$collector
+					->addMessage(sprintf('Script is executed as user %s - this matches the file owner. Good!', $processUser));
+			}
+		}
+
 		return $debugBar;
 	}
 
