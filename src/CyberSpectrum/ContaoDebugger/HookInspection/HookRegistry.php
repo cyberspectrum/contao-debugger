@@ -137,7 +137,7 @@ class HookRegistry
 			'loadDataContainer',
 			'reviseTable',
 			'removeRecipient',
-			// TODO: unsure about this one here as we are not exiting as we can not as we do not create a pdf.
+			// Unsure about this one here as we are not exiting as we can not as we do not create a pdf.
 			// we have to check if Contao will call the other hooks after this one "fails".
 			'printArticleAsPdf',
 			'postUpload',
