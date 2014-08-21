@@ -377,6 +377,10 @@ select.phpdebugbar-datasets-switcher,
 .phpdebugbar-openhandler .styled_select {
 	display: none;
 }
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
+	background-color: #ff88b7;
+}
 ';
 				break;
 			case 'js':
