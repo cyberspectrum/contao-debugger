@@ -103,6 +103,9 @@ class Debugger
 	 */
 	public static function boot()
 	{
+		ini_set('html_errors', 0);
+		ini_set('display_startup_errors', 1);
+		ini_set('display_errors', 1);
 
 		array_insert($GLOBALS['TL_HOOKS']['initializeSystem'], 0, array(array(__CLASS__, 'initializeSystem')));
 		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleOutput');
@@ -118,6 +121,10 @@ class Debugger
 		$debugBar = self::createDebuggerInstance();
 		$debugBar->getJavascriptRenderer()->setOpenHandlerUrl(TL_PATH . '/system/modules/debug/data/retrieve.php');
 
+		/** @var ExceptionsCollector $exceptions */
+		$exceptions = $debugBar->getCollector('exceptions');
+		ExceptionHandler::attach($exceptions);
+
 		register_shutdown_function(array(__CLASS__, 'postMortem'));
 
 		return $debugBar;
@@ -132,20 +139,8 @@ class Debugger
 	 */
 	public static function initializeSystem()
 	{
-		/** @var ExceptionsCollector $exceptions */
-		$exceptions = self::getHandler('exceptions');
-		ExceptionHandler::attach($exceptions);
-
-		ini_set('html_errors', 0);
-		ini_set('display_startup_errors', 1);
-
-		static $registered;
-		if ($registered)
-		{
-			return;
-		}
-
-		$registered = true;
+		ini_set('display_startup_errors', 0);
+		ini_set('display_errors', 0);
 	}
 
 	/**
