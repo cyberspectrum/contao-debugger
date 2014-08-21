@@ -116,7 +116,7 @@ class HookRegistry
 	 *
 	 * @return void
 	 */
-	protected function log($message, $hookName)
+	protected static function log($message, $hookName)
 	{
 		self::$collector->addHook($hookName, $message);
 	}
