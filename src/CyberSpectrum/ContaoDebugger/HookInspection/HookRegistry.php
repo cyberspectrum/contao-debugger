@@ -40,13 +40,15 @@ class HookRegistry
 	/**
 	 * Retrieve all valid hook names.
 	 *
+	 * @param bool $includeRegistered Flag determining if the registered hooks shall be also examined.
+	 *
 	 * @return string[]
 	 */
-	public static function getHookNames()
+	public static function getHookNames($includeRegistered = false)
 	{
 		return
 			array_unique(array_merge(
-				array_keys($GLOBALS['TL_HOOKS']),
+				$includeRegistered ? array_keys($GLOBALS['TL_HOOKS']) : array(),
 				self::$hookMap['void'],
 				array_keys(self::$hookMap['arg']),
 				array_keys(self::$hookMap['value'])
@@ -104,6 +106,11 @@ class HookRegistry
 			}
 
 			$GLOBALS['TL_HOOKS'][$k][] = array(__CLASS__, 'out_' . $k);
+		}
+
+		foreach (array_diff(self::getHookNames(true), $hooks) as $hook)
+		{
+			trigger_error('UNKNOWN HOOK ' . $hook . ' detected. Inspection is not active for this one.', E_USER_WARNING);
 		}
 	}
 
