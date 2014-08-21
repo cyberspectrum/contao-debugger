@@ -168,6 +168,7 @@ class HookRegistry
 			'getAllEvents'           => 0,
 			'generateFrontendUrl'    => 3,
 			'parseTemplate'          => 0,
+			'sqlCompileCommands'     => 0,
 		),
 		'value'                      => array
 		(
@@ -180,6 +181,7 @@ class HookRegistry
 			'checkCredentials'       => false,
 			'addLogEntry'            => false,
 			'addCustomRegexp'        => false,
+			'getSystemMessages'      => '',
 		)
 	);
 
