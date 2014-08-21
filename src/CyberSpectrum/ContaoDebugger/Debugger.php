@@ -361,7 +361,7 @@ select.phpdebugbar-datasets-switcher,
 		var isNotHandler=(url.substr(0, ' . strlen($handler) . ') !== "' . $handler . '");
 		if (isNotHandler) {
 			this.addEventListener("readystatechange", function() {
-				if (phpdebugbar && (this.readyState == 4))
+				if ((typeof window.phpdebugbar !== "undefined") && window.phpdebugbar && (this.readyState == 4))
 				{
 					for (var i = 1;; i++) {
 						var id = this.getResponseHeader("phpdebugbar-id-" + i);
@@ -369,9 +369,9 @@ select.phpdebugbar-datasets-switcher,
 							break;
 						}
 
-						phpdebugbar.loadDataSet(id, "(ajax)");
+						window.phpdebugbar.loadDataSet(id, "(ajax)");
 					}
-					/* phpdebugbar.ajaxHandler.handle(this); */
+					/* window.phpdebugbar.ajaxHandler.handle(this); */
 				}
 			}, false);
 		};
@@ -437,7 +437,7 @@ select.phpdebugbar-datasets-switcher,
 		}
 
 		$scripts   = self::generateScripts();
-		$strBuffer = str_replace('<head>', $scripts['script'] . '<head>', $strBuffer);
+		$strBuffer = str_replace('<head>', '<head>' . $scripts['script'], $strBuffer);
 		$strBuffer = str_replace('</head>', $scripts['css'] . '</head>', $strBuffer);
 		$strBuffer = str_replace('</body>', self::generateOutput() . '</body>', $strBuffer);
 
