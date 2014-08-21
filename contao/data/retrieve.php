@@ -11,8 +11,6 @@
  * @filesource
  */
 
-define('TL_MODE', 'BE');
-
 // Search the initialize.php.
 $dir = dirname($_SERVER['SCRIPT_FILENAME']);
 
@@ -27,13 +25,31 @@ if (!is_file($dir . '/system/initialize.php'))
 	exit;
 }
 
-require_once $dir . '/system/initialize.php';
+define('TL_ROOT', $dir);
 
-// @codingStandardsIgnoreStart - We want to access the $_GET array.
-if (isset($_GET['asset']))
+while ($dir != '.' && $dir != '/')
 {
-	\CyberSpectrum\ContaoDebugger\Debugger::generateAsset($_GET['asset']);
-	return;
+	if (is_file($dir . '/composer/vendor/autoload.php'))
+	{
+		$file = $dir . '/composer/vendor/autoload.php';
+		break;
+	}
+
+	if (is_file($dir . '/vendor/autoload.php'))
+	{
+		$file = $dir . '/vendor/autoload.php';
+		break;
+	}
+
+	$dir = dirname($dir);
 }
-// @codingStandardsIgnoreEnd
+
+if (!(isset($file) && is_file($file)))
+{
+	echo 'Could not find autoload.php, where is Composer?';
+	exit;
+}
+
+require_once $file;
+
 \CyberSpectrum\ContaoDebugger\Debugger::getPersisted();

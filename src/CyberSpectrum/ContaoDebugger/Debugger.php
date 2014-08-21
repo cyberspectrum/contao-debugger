@@ -82,6 +82,19 @@ class Debugger
 	// @codingStandardsIgnoreEnd
 
 	/**
+	 * Create a new debugger instance.
+	 *
+	 * @return DebugBar
+	 */
+	public static function createDebuggerInstance()
+	{
+		$debugBar = new DebugBar();
+		$debugBar->setStorage(new FileStorage(TL_ROOT . '/system/tmp/debug.log'));
+
+		return $debugBar;
+	}
+
+	/**
 	 * First stage of the debugger initialization.
 	 *
 	 * Called from config.php.
@@ -102,9 +115,8 @@ class Debugger
 		{
 			mkdir(TL_ROOT . '/system/tmp/debug.log', 0777, true);
 		}
-		$debugBar = new DebugBar();
-		$debugBar->setStorage(new FileStorage(TL_ROOT . '/system/tmp/debug.log'));
 
+		$debugBar = self::createDebuggerInstance();
 		$debugBar->getJavascriptRenderer()->setOpenHandlerUrl(TL_PATH . '/system/modules/debug/data/retrieve.php');
 
 		register_shutdown_function(array(__CLASS__, 'postMortem'));
@@ -283,20 +295,21 @@ class Debugger
 	 */
 	public static function getPersisted()
 	{
-		self::markDone();
-		$openHandler = new OpenHandler(self::getDebugger());
+		$openHandler = new OpenHandler(self::createDebuggerInstance());
 		$openHandler->handle();
 	}
 
 	/**
-	 * Generate asset data and echo it to the web server.
+	 * Generate asset data and save it to the temp dir.
 	 *
 	 * @param string $type The asset type to generate. Either 'css' or 'js'.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public static function generateAsset($type)
 	{
+		$filename = '/assets/' . $type . '/contao-debug.' . $type;
+
 		self::markDone();
 
 		$renderer = self::getDebugger()->getJavascriptRenderer();
@@ -311,7 +324,6 @@ class Debugger
 		switch ($type)
 		{
 			case 'css':
-				header('Content-Type: text/css');
 				foreach ($cssFiles as $file)
 				{
 					$content .= str_replace(
@@ -347,7 +359,6 @@ select.phpdebugbar-datasets-switcher,
 ';
 				break;
 			case 'js':
-				header('Content-Type: application/javascript');
 				foreach ($jsFiles as $file)
 				{
 					$content .= file_get_contents($file) . "\n";
@@ -385,10 +396,11 @@ select.phpdebugbar-datasets-switcher,
 
 				break;
 			default:
-
 		}
 
-		echo $content;
+		file_put_contents(TL_ROOT . $filename, $content);
+
+		return TL_PATH . $filename;
 	}
 
 	/**
@@ -401,11 +413,11 @@ select.phpdebugbar-datasets-switcher,
 		$scripts = array(
 			'script' =>
 				'<script src="' . TL_PATH . '/assets/jquery/core/' . JQUERY . '/jquery.min.js"></script>' .
-				'<script src="' . TL_PATH . '/system/modules/debug/data/retrieve.php?asset=js"></script>'
+				'<script src="' . self::generateAsset('js') . '"></script>'
 			,
 			'css'    =>
 				'<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">' .
-				'<link href="' . TL_PATH . '/system/modules/debug/data/retrieve.php?asset=css" rel="stylesheet">'
+				'<link href="' . self::generateAsset('css') . '" rel="stylesheet">'
 		);
 		return $scripts;
 	}

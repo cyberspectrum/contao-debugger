@@ -53,12 +53,15 @@ class DebugBar extends \DebugBar\DebugBar
 			->addCollector($memory)
 			->addCollector($exception);
 
-		foreach ($GLOBALS['debugger-panels'] as $panelFunc)
+		if (isset($GLOBALS['debugger-panels']))
 		{
-			$collector = $panelFunc($this);
-			if ($collector)
+			foreach ($GLOBALS['debugger-panels'] as $panelFunc)
 			{
-				$this->addCollector($collector);
+				$collector = $panelFunc($this);
+				if ($collector)
+				{
+					$this->addCollector($collector);
+				}
 			}
 		}
 	}
