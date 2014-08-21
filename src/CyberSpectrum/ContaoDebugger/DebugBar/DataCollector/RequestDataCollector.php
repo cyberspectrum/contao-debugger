@@ -35,6 +35,8 @@ class RequestDataCollector extends \DebugBar\DataCollector\RequestDataCollector
 		}
 
 		$data['outgoing headers'] = $this->getDataFormatter()->formatVar(headers_list());
+		$constants                = get_defined_constants(true);
+		$data['constants']        = $this->getDataFormatter()->formatVar($constants['user']);
 
 		return $data;
 	}
