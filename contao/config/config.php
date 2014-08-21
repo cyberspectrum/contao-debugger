@@ -20,12 +20,19 @@ if (defined('CONTAO_DEBUGGER_DEBUG_EVENTS') && CONTAO_DEBUGGER_DEBUG_EVENTS)
 		'CyberSpectrum\ContaoDebugger\Events\DebuggedEventDispatcher::register';
 };
 
+$GLOBALS['debugger-panels']['hooks'] = function($debugger)
+{
+	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+	$collector = new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\HookInspectionCollector();
+	\CyberSpectrum\ContaoDebugger\HookInspection\HookRegistry::attach($collector, $debugger->getCollector('time'));
+	return $collector;
+};
+
 $GLOBALS['debugger-panels']['database'] = function($debugger)
 {
 	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
 	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoSQLCollector($debugger->getCollector('time'));
 };
-
 
 $GLOBALS['debugger-panels']['contao-autoloader'] = function($debugger)
 {
@@ -43,8 +50,6 @@ $GLOBALS['debugger-panels']['contao-autoloader'] = function($debugger)
 	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
 	return new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\ContaoAutoloaderCollector();
 };
-
-
 
 if (defined('CONTAO_DEBUGGER_DEBUG_PROFILING') && CONTAO_DEBUGGER_DEBUG_PROFILING)
 {
