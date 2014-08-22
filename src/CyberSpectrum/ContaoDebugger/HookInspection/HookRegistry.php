@@ -166,7 +166,7 @@ class HookRegistry
 			'getSearchablePages'     => 0,
 			'getPageIdFromUrl'       => 0,
 			'getAllEvents'           => 0,
-			'generateFrontendUrl'    => 3,
+			'generateFrontendUrl'    => 2,
 			'parseTemplate'          => 0,
 			'sqlCompileCommands'     => 0,
 		),
