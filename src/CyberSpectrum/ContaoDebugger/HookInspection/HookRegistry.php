@@ -225,7 +225,7 @@ class HookRegistry
 		'loadFormField'             => array(),
 		'listComments'              => array(),
 		'importUser'                => array(),
-		'checkCredentials'          => array(0, 1, 3),
+		'checkCredentials'          => array(0, 1),
 		'addLogEntry'               => array(),
 		'addCustomRegexp'           => array(),
 	);
