@@ -155,6 +155,8 @@ class HookRegistry
 			'generatePage',
 			'executePreActions',
 			'executePostActions',
+			'generateXmlFiles',
+			'closeAccount',
 		),
 		'arg'                        => array
 		(
