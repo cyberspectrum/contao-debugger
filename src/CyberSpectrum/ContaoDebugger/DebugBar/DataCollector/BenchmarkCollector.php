@@ -105,8 +105,6 @@ class BenchmarkCollector extends DataCollector implements Renderable
 	 */
 	public function collect()
 	{
-		$this->requestEndTime = microtime(true);
-
 		$measures = array();
 		$values   = $this->measures;
 		$max      = 0;
