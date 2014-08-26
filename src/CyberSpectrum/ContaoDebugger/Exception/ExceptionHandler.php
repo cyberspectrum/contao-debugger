@@ -162,12 +162,15 @@ class ExceptionHandler
 	 */
 	public static function handleException($e)
 	{
-		error_log(sprintf("PHP Fatal error: Uncaught exception '%s' with message '%s' thrown in %s on line %s\n%s",
-			get_class($e),
-			$e->getMessage(),
-			$e->getFile(),
-			$e->getLine(),
-			$e->getTraceAsString()));
+		if (($e instanceof \ErrorException) && ($e->getSeverity() !== E_NOTICE))
+		{
+			error_log(sprintf("PHP Fatal error: Uncaught exception '%s' with message '%s' thrown in %s on line %s\n%s",
+				get_class($e),
+				$e->getMessage(),
+				$e->getFile(),
+				$e->getLine(),
+				$e->getTraceAsString()));
+		}
 
 		self::addException($e);
 	}
