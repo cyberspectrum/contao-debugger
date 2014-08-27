@@ -109,8 +109,6 @@ class Debugger
 		ini_set('display_errors', 1);
 
 		array_insert($GLOBALS['TL_HOOKS']['initializeSystem'], 0, array(array(__CLASS__, 'initializeSystem')));
-		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleOutput');
-		$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(__CLASS__, 'handleOutput');
 
 		self::setMemoryLimit();
 
@@ -167,6 +165,8 @@ class Debugger
 	{
 		ini_set('display_startup_errors', 0);
 		ini_set('display_errors', 0);
+		$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]  = array(__CLASS__, 'handleOutput');
+		$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(__CLASS__, 'handleOutput');
 	}
 
 	/**
