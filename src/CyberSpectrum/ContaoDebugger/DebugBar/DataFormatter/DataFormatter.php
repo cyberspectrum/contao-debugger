@@ -37,7 +37,11 @@ class DataFormatter extends \DebugBar\DataFormatter\DataFormatter
 
 		if (is_string($var) && strlen($var) > 2048)
 		{
-			return 'string ( ' . strlen( $var ) . ') "' . htmlspecialchars(substr($var, 0, 2048), ENT_NOQUOTES, 'UTF-8', true) . '..."';
+			return sprintf(
+				'string (%s) "%s"...',
+				strlen($var),
+				htmlspecialchars(substr($var, 0, 2048), ENT_NOQUOTES, 'UTF-8', true)
+			);
 		}
 
 		return parent::kintLite($var, $level);

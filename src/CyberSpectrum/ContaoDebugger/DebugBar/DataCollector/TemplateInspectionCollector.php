@@ -65,20 +65,10 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
 	public function collect()
 	{
 		$data = array();
-		$seq  = array();
 		foreach ($this->messages as $i => $var)
 		{
 			$label = $var['label'];
-			if (!isset($seq[$label]))
-			{
-				$seq[$label] = 0;
-			}
-			else
-			{
-				$seq[$label]++;
-			}
 
-			//$label = $label .  ' ' . $seq[$label];
 			$label = $i . ' ' . $label;
 
 			$data[$label] = $var['message'];
