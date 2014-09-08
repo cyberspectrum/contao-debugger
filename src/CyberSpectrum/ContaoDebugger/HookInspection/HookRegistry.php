@@ -157,6 +157,7 @@ class HookRegistry
 			'executePostActions',
 			'generateXmlFiles',
 			'closeAccount',
+			'getArticle',
 		),
 		'arg'                        => array
 		(
@@ -171,6 +172,8 @@ class HookRegistry
 			'generateFrontendUrl'    => 2,
 			'parseTemplate'          => 0,
 			'sqlCompileCommands'     => 0,
+			'getContentElement'      => 1,
+			'getFrontendModule'      => 1,
 		),
 		'value'                      => array
 		(
