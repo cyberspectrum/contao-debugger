@@ -11,6 +11,11 @@
  * @filesource
  */
 
+if (!\Config::get('debugMode'))
+{
+	return;
+}
+
 define('CONTAO_DEBUGGER_DEBUG_EVENTS', true);
 //define('CONTAO_DEBUGGER_DEBUG_PROFILING', true);
 
