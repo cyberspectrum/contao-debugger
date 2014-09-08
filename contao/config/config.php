@@ -28,6 +28,14 @@ $GLOBALS['debugger-panels']['hooks'] = function($debugger)
 	return $collector;
 };
 
+$GLOBALS['debugger-panels']['templates'] = function($debugger)
+{
+	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
+	$collector = new \CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\TemplateInspectionCollector();
+	\CyberSpectrum\ContaoDebugger\Templates\TemplateDebugger::attach($collector);
+	return $collector;
+};
+
 $GLOBALS['debugger-panels']['database'] = function($debugger)
 {
 	/** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugger */
