@@ -18,26 +18,26 @@ namespace CyberSpectrum\ContaoDebugger\DebugBar\DataCollector;
  */
 class RequestDataCollector extends \DebugBar\DataCollector\RequestDataCollector
 {
-	/**
-	 * {@inheritDoc}
-	 */
-	public function collect()
-	{
-		$vars = array('_GET', '_POST', '_SESSION', '_COOKIE', '_SERVER');
-		$data = array();
+    /**
+     * {@inheritDoc}
+     */
+    public function collect()
+    {
+        $vars = array('_GET', '_POST', '_SESSION', '_COOKIE', '_SERVER');
+        $data = array();
 
-		foreach ($vars as $var)
-		{
-			if (isset($GLOBALS[$var]))
-			{
-				$data['$' . $var] = $this->getDataFormatter()->formatVar($GLOBALS[$var]);
-			}
-		}
+        foreach ($vars as $var)
+        {
+            if (isset($GLOBALS[$var]))
+            {
+                $data['$' . $var] = $this->getDataFormatter()->formatVar($GLOBALS[$var]);
+            }
+        }
 
-		$data['outgoing headers'] = $this->getDataFormatter()->formatVar(headers_list());
-		$constants                = get_defined_constants(true);
-		$data['constants']        = $this->getDataFormatter()->formatVar($constants['user']);
+        $data['outgoing headers'] = $this->getDataFormatter()->formatVar(headers_list());
+        $constants                = get_defined_constants(true);
+        $data['constants']        = $this->getDataFormatter()->formatVar($constants['user']);
 
-		return $data;
-	}
+        return $data;
+    }
 }

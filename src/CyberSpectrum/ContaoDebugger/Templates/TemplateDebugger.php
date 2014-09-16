@@ -20,35 +20,35 @@ use CyberSpectrum\ContaoDebugger\DebugBar\DataCollector\TemplateInspectionCollec
  */
 class TemplateDebugger
 {
-	/**
-	 * The collector to use.
-	 *
-	 * @var TemplateInspectionCollector
-	 */
-	protected static $collector;
+    /**
+     * The collector to use.
+     *
+     * @var TemplateInspectionCollector
+     */
+    protected static $collector;
 
-	/**
-	 * Attach to the collector and HOOKs.
-	 *
-	 * @param TemplateInspectionCollector $collector The collector.
-	 *
-	 * @return void
-	 */
-	public static function attach($collector)
-	{
-		self::$collector = $collector;
-		array_insert($GLOBALS['TL_HOOKS']['parseTemplate'], 0, array(array(__CLASS__, 'parseTemplate')));
-	}
+    /**
+     * Attach to the collector and HOOKs.
+     *
+     * @param TemplateInspectionCollector $collector The collector.
+     *
+     * @return void
+     */
+    public static function attach($collector)
+    {
+        self::$collector = $collector;
+        array_insert($GLOBALS['TL_HOOKS']['parseTemplate'], 0, array(array(__CLASS__, 'parseTemplate')));
+    }
 
-	/**
-	 * Adds a template.
-	 *
-	 * @param \Template $template The message.
-	 *
-	 * @return void
-	 */
-	public function parseTemplate(\Template $template)
-	{
-		self::$collector->addTemplate($template);
-	}
+    /**
+     * Adds a template.
+     *
+     * @param \Template $template The message.
+     *
+     * @return void
+     */
+    public function parseTemplate(\Template $template)
+    {
+        self::$collector->addTemplate($template);
+    }
 }

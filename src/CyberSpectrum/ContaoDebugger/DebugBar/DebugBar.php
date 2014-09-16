@@ -25,73 +25,73 @@ use DebugBar\DataCollector\TimeDataCollector;
  */
 class DebugBar extends \DebugBar\DebugBar
 {
-	/**
-	 * Functions to be called when the Debugger shall not collect any data anymore.
-	 *
-	 * @var callable
-	 */
-	protected $stopFunctions = array();
+    /**
+     * Functions to be called when the Debugger shall not collect any data anymore.
+     *
+     * @var callable
+     */
+    protected $stopFunctions = array();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function __construct()
-	{
-		$time = new TimeDataCollector(microtime(true));
-		$time->startMeasure('Debugger active.');
-		$messages  = new MessagesCollector();
-		$phpInfo   = new PhpInfoCollector();
-		$request   = new RequestDataCollector();
-		$memory    = new MemoryCollector();
-		$exception = new ExceptionsCollector();
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct()
+    {
+        $time = new TimeDataCollector(microtime(true));
+        $time->startMeasure('Debugger active.');
+        $messages  = new MessagesCollector();
+        $phpInfo   = new PhpInfoCollector();
+        $request   = new RequestDataCollector();
+        $memory    = new MemoryCollector();
+        $exception = new ExceptionsCollector();
 
-		$this
-			->addCollector($messages)
-			->addCollector($time)
-			->addCollector($phpInfo)
-			->addCollector($request)
-			->addCollector($memory)
-			->addCollector($exception);
+        $this
+            ->addCollector($messages)
+            ->addCollector($time)
+            ->addCollector($phpInfo)
+            ->addCollector($request)
+            ->addCollector($memory)
+            ->addCollector($exception);
 
-		if (isset($GLOBALS['debugger-panels']))
-		{
-			foreach ($GLOBALS['debugger-panels'] as $panelFunc)
-			{
-				$collector = $panelFunc($this);
-				if ($collector)
-				{
-					$this->addCollector($collector);
-				}
-			}
-		}
-	}
+        if (isset($GLOBALS['debugger-panels']))
+        {
+            foreach ($GLOBALS['debugger-panels'] as $panelFunc)
+            {
+                $collector = $panelFunc($this);
+                if ($collector)
+                {
+                    $this->addCollector($collector);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Register a method to be called when the debugger is shutting down.
-	 *
-	 * @param callable $function The function to call.
-	 *
-	 * @return DebugBar
-	 */
-	public function registerStopFunction($function)
-	{
-		$this->stopFunctions[] = $function;
+    /**
+     * Register a method to be called when the debugger is shutting down.
+     *
+     * @param callable $function The function to call.
+     *
+     * @return DebugBar
+     */
+    public function registerStopFunction($function)
+    {
+        $this->stopFunctions[] = $function;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Call the registered methods to advise the collectors to not accept any further data.
-	 *
-	 * @return DebugBar
-	 */
-	public function stopCollectors()
-	{
-		foreach ($this->stopFunctions as $function)
-		{
-			$function($this);
-		}
+    /**
+     * Call the registered methods to advise the collectors to not accept any further data.
+     *
+     * @return DebugBar
+     */
+    public function stopCollectors()
+    {
+        foreach ($this->stopFunctions as $function)
+        {
+            $function($this);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 }
