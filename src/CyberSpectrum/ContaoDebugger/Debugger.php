@@ -393,6 +393,10 @@ select.phpdebugbar-datasets-switcher,
 div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
 	background-color: #ff88b7;
 }
+
+div.phpdebugbar-widgets-sqlqueries code.phpdebugbar-widgets-sql {
+	font-size: 11px;
+}
 ';
 				break;
 			case 'js':
