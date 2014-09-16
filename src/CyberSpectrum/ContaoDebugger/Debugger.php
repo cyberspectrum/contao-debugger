@@ -206,6 +206,18 @@ class Debugger
 	}
 
 	/**
+	 * Determine if we are potentially running within a popup.
+	 *
+	 * @return bool
+	 */
+	protected function isPopup()
+	{
+		$script = \Environment::get('script');
+		// Not backend main, not frontend index.php and not frontend without anything.
+		return ($script !== 'contao/main.php') && ($script !== 'index.php') && ($script !== '');
+	}
+
+	/**
 	 * Start to measure execution.
 	 *
 	 * @param string      $message The message to use for the measurement. Must also be used in stopMeasure() call.
@@ -300,7 +312,7 @@ class Debugger
 	{
 		$debugBar = self::getDebugger();
 		$debugBar->sendDataInHeaders(true);
-		return $debugBar->getJavascriptRenderer()->render(!self::isAjax());
+		return $debugBar->getJavascriptRenderer()->render(!(self::isAjax() || self::isPopup()));
 	}
 
 	/**
