@@ -13,8 +13,6 @@
 
 namespace CyberSpectrum\ContaoDebugger;
 
-use ContaoCommunityAlliance\Contao\EventDispatcher\Event\CreateEventDispatcherEvent;
-use CyberSpectrum\ContaoDebugger\Database\DatabaseDebugger;
 use CyberSpectrum\ContaoDebugger\DebugBar\DebugBar;
 use CyberSpectrum\ContaoDebugger\Exception\ExceptionHandler;
 use CyberSpectrum\ContaoDebugger\Exception\PostMortemException;
@@ -112,8 +110,7 @@ class Debugger
 
         self::setMemoryLimit();
 
-        if (!is_dir(TL_ROOT . '/system/tmp/debug.log'))
-        {
+        if (!is_dir(TL_ROOT . '/system/tmp/debug.log')) {
             mkdir(TL_ROOT . '/system/tmp/debug.log', 0777, true);
         }
 
@@ -126,28 +123,31 @@ class Debugger
 
         register_shutdown_function(array(__CLASS__, 'postMortem'));
 
-        if (function_exists('posix_getpwuid') && function_exists('posix_geteuid') && function_exists('get_current_user'))
-        {
+        if (function_exists('posix_getpwuid')
+            && function_exists('posix_geteuid') && function_exists('get_current_user')
+        ) {
             $processUser = posix_getpwuid(posix_geteuid());
             $processUser = $processUser['name'];
             $scriptUser  = get_current_user();
             $collector   = $debugBar->getCollector('messages');
             /** @var MessagesCollector $collector */
-            if ($processUser != $scriptUser)
-            {
+            if ($processUser != $scriptUser) {
                 $collector->addMessage(
                     sprintf(
-                        'Script is executed as user "%s" but the script is owned by user %s - This might cause problems.',
+                        'Script is executed as user "%s" but the script is owned by user %s - This may cause problems.',
                         $processUser,
                         $scriptUser
                     ),
                     'warning'
                 );
-            }
-            else
-            {
+            } else {
                 $collector
-                    ->addMessage(sprintf('Script is executed as user %s - this matches the file owner. Good!', $processUser));
+                    ->addMessage(
+                        sprintf(
+                            'Script is executed as user %s - this matches the file owner. Good!',
+                            $processUser
+                        )
+                    );
             }
         }
 
@@ -230,8 +230,7 @@ class Debugger
     {
         /** @var TimeDataCollector $time */
         $time = self::getHandler('time');
-        if ($time)
-        {
+        if ($time) {
             $time->startMeasure($message, $label);
         }
     }
@@ -247,8 +246,7 @@ class Debugger
     {
         /** @var TimeDataCollector $time */
         $time = self::getHandler('time');
-        if ($time)
-        {
+        if ($time) {
             $time->stopMeasure($message);
         }
     }
@@ -266,8 +264,7 @@ class Debugger
     {
         /** @var MessagesCollector $messages */
         $messages = self::getHandler('messages');
-        if ($messages)
-        {
+        if ($messages) {
             $messages->addMessage($message, $label);
         }
     }
@@ -295,8 +292,7 @@ class Debugger
     public static function getHandler($name)
     {
         $debugBar = self::getDebugger();
-        if (!$debugBar)
-        {
+        if (!$debugBar) {
             return null;
         }
 
@@ -351,19 +347,18 @@ class Debugger
         switch ($type)
         {
             case 'css':
-                foreach ($cssFiles as $file)
-                {
+                foreach ($cssFiles as $file) {
                     $content .= str_replace(
-                            array(
-                                'url(php-icon.png)',
-                                'url(icons.png)'
-                            ),
-                            array(
-                                'url(' . TL_PATH . '/system/modules/debug/assets/logo.png)',
-                                'url(' . TL_PATH . '/system/modules/debug/assets/icons.png)'
-                            ),
-                            file_get_contents($file)
-                        ) . "\n";
+                        array(
+                            'url(php-icon.png)',
+                            'url(icons.png)'
+                        ),
+                        array(
+                            'url(' . TL_PATH . '/system/modules/debug/assets/logo.png)',
+                            'url(' . TL_PATH . '/system/modules/debug/assets/icons.png)'
+                        ),
+                        file_get_contents($file)
+                    ) . "\n";
                 }
 
                 $content .= '
@@ -400,8 +395,7 @@ div.phpdebugbar-widgets-sqlqueries code.phpdebugbar-widgets-sql {
 ';
                 break;
             case 'js':
-                foreach ($jsFiles as $file)
-                {
+                foreach ($jsFiles as $file) {
                     $content .= file_get_contents($file) . "\n";
                 }
 
@@ -474,15 +468,13 @@ div.phpdebugbar-widgets-sqlqueries code.phpdebugbar-widgets-sql {
     {
         self::markDone();
 
-        if (self::isAjax())
-        {
+        if (self::isAjax()) {
             $debugBar = self::getDebugger();
             $debugBar->stackData();
 
-            $i = 1;
-            foreach (array_keys($debugBar->getStackedData()) as $id)
-            {
-                header('phpdebugbar-id-' . ($i++) . ': ' . $id);
+            $index = 1;
+            foreach (array_keys($debugBar->getStackedData()) as $id) {
+                header('phpdebugbar-id-' . ($index++) . ': ' . $id);
             }
 
             return $strBuffer;
@@ -503,16 +495,14 @@ div.phpdebugbar-widgets-sqlqueries code.phpdebugbar-widgets-sql {
      */
     public static function postMortem()
     {
-        if (self::isDone())
-        {
+        if (self::isDone()) {
             return;
         }
         self::markDone();
 
         // If we end up here, we were interrupted the hard way, aka fatal error bypassing the error handler.
-        if (($error = error_get_last()) !== null)
-        {
-            $e = new PostMortemException(
+        if (($error = error_get_last()) !== null) {
+            $exception = new PostMortemException(
                 ExceptionHandler::getErrorName($error['type']) . ': ' . $error['message'],
                 0,
                 $error['type'],
@@ -520,15 +510,12 @@ div.phpdebugbar-widgets-sqlqueries code.phpdebugbar-widgets-sql {
                 $error['line']
             );
 
-            ExceptionHandler::handleException($e);
+            ExceptionHandler::handleException($exception);
         }
 
-        if (self::isAjax())
-        {
-            foreach (headers_list() as $header)
-            {
-                if (substr($header, 0, 17) == 'X-Ajax-Location: ')
-                {
+        if (self::isAjax()) {
+            foreach (headers_list() as $header) {
+                if (substr($header, 0, 17) == 'X-Ajax-Location: ') {
                     self::handleOutput('');
                     return;
                 }

@@ -27,7 +27,7 @@ class DatabaseDelegator extends Database
      *
      * @var Database
      */
-    protected $db;
+    protected $database;
 
     /**
      * The debugger we are attached to.
@@ -39,13 +39,13 @@ class DatabaseDelegator extends Database
     /**
      * Create a new instance.
      *
-     * @param Database         $db       The database to use for delegation.
+     * @param Database         $database The database to use for delegation.
      *
      * @param DatabaseDebugger $debugger The database debugger.
      */
-    public function __construct($db, DatabaseDebugger $debugger)
+    public function __construct($database, DatabaseDebugger $debugger)
     {
-        $this->db                   = $db;
+        $this->database             = $database;
         $this->debugger             = $debugger;
         $this->resConnection        = $this->reflectionProperty('resConnection');
         $this->blnDisableAutocommit = $this->reflectionProperty('blnDisableAutocommit');
@@ -57,7 +57,7 @@ class DatabaseDelegator extends Database
      */
     public function __destruct()
     {
-        $this->db = null;
+        $this->database = null;
     }
 
     /**
@@ -69,10 +69,9 @@ class DatabaseDelegator extends Database
      */
     public function __get($key)
     {
-        $result = $this->db->$key;
+        $result = $this->getDatabase()->$key;
 
-        if ($result === null)
-        {
+        if ($result === null) {
             $result = $this->reflectionProperty($key);
         }
 
@@ -84,9 +83,9 @@ class DatabaseDelegator extends Database
      *
      * @return Database
      */
-    public function getDb()
+    public function getDatabase()
     {
-        return $this->db;
+        return $this->database;
     }
 
     /**
@@ -112,15 +111,14 @@ class DatabaseDelegator extends Database
      */
     public function invoke($func, $argv)
     {
-        $reflection = new \ReflectionClass($this->db);
-        if (!$reflection->hasMethod($func))
-        {
+        $reflection = new \ReflectionClass($this->getDatabase());
+        if (!$reflection->hasMethod($func)) {
             return null;
         }
 
         $method = $reflection->getMethod($func);
         $method->setAccessible(true);
-        return $method->invokeArgs($this->db, $argv);
+        return $method->invokeArgs($this->getDatabase(), $argv);
     }
 
     /**
@@ -132,15 +130,14 @@ class DatabaseDelegator extends Database
      */
     protected function reflectionProperty($name)
     {
-        $reflection = new \ReflectionClass($this->db);
-        if (!$reflection->hasProperty($name))
-        {
+        $reflection = new \ReflectionClass($this->getDatabase());
+        if (!$reflection->hasProperty($name)) {
             return null;
         }
 
         $property = $reflection->getProperty($name);
         $property->setAccessible(true);
-        return $property->getValue($this->db);
+        return $property->getValue($this->getDatabase());
     }
 
     /**
@@ -154,13 +151,11 @@ class DatabaseDelegator extends Database
      */
     public function __call($func, $argv)
     {
-        if ($func == 'execute')
-        {
+        if ($func == 'execute') {
             return $this->__call('prepare', $argv)->__call($func, array());
         }
 
-        if ($func == 'prepare')
-        {
+        if ($func == 'prepare') {
             $statement = new StatementDelegator($this->invoke('createStatement', array(
                 $this->reflectionProperty('resConnection'),
                 $this->reflectionProperty('blnDisableAutocommit')
@@ -173,13 +168,11 @@ class DatabaseDelegator extends Database
 
         $result = $this->invoke($func, $argv);
 
-        if ($result === $this->db)
-        {
+        if ($result === $this->getDatabase()) {
             return $this;
         }
 
-        if ($result instanceof Statement)
-        {
+        if ($result instanceof Statement) {
             Debugger::addDebug('\Contao\Database\Statement::' . $func . ' wrap()');
             return new StatementDelegator($result, $this);
         }
@@ -214,6 +207,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function find_in_set($strKey, $varSet, $blnIsField = false)
     {
@@ -222,6 +217,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function list_fields($strTable)
     {
@@ -230,6 +227,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function set_database($strDatabase)
     {
@@ -262,6 +261,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function lock_tables($arrTables)
     {
@@ -278,6 +279,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function get_size_of($strTable)
     {
@@ -286,6 +289,8 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function get_next_id($strTable)
     {
@@ -303,7 +308,10 @@ class DatabaseDelegator extends Database
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     protected function createStatement($resConnection, $blnDisableAutocommit)
     {
         return new StatementDelegator($this->invoke(__FUNCTION__, array(
@@ -311,4 +319,5 @@ class DatabaseDelegator extends Database
             $this->reflectionProperty('blnDisableAutocommit')
         )), $this);
     }
+    // @codingStandardsIgnoreEnd
 }

@@ -49,8 +49,7 @@ class DebuggedEventDispatcher implements EventDispatcherInterface
     {
         /** @var \CyberSpectrum\ContaoDebugger\DebugBar\DebugBar $debugBar */
         $debugBar = $GLOBALS['debugger'];
-        if (!$debugBar)
-        {
+        if (!$debugBar) {
             return;
         }
 
@@ -105,14 +104,16 @@ class DebuggedEventDispatcher implements EventDispatcherInterface
     public function dispatch($eventName, Event $event = null)
     {
         $listeners = $this->getListeners($eventName);
-        if ($listeners)
-        {
-            $this->debug(sprintf(
-                'Firing event %s(%s) to %s subscribers.',
-                $eventName,
-                get_class($event),
-                count($listeners)
-                ), 'fire-used');
+        if ($listeners) {
+            $this->debug(
+                sprintf(
+                    'Firing event %s(%s) to %s subscribers.',
+                    $eventName,
+                    get_class($event),
+                    count($listeners)
+                ),
+                'fire-used'
+            );
         }
         return $this->realDispatcher->dispatch($eventName, $event);
     }
@@ -206,4 +207,3 @@ class DebuggedEventDispatcher implements EventDispatcherInterface
         return $this->realDispatcher->hasListeners($eventName);
     }
 }
-

@@ -38,8 +38,7 @@ class DatabaseDebugger extends \ArrayObject
     {
         static $attached;
 
-        if (isset($attached))
-        {
+        if (isset($attached)) {
             return;
         }
 
@@ -67,8 +66,7 @@ class DatabaseDebugger extends \ArrayObject
      */
     public function addStatement($info)
     {
-        if ($this->collector)
-        {
+        if ($this->collector) {
             $this->collector->addStatement($info);
         }
     }

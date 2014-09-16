@@ -56,13 +56,13 @@ class ExceptionHandler
     /**
      * Add an exception to the collector.
      *
-     * @param \Exception $e The exception.
+     * @param \Exception $exception The exception.
      *
      * @return void
      */
-    protected static function addException($e)
+    protected static function addException($exception)
     {
-        self::$collector->addException($e);
+        self::$collector->addException($exception);
     }
 
     /**
@@ -74,8 +74,7 @@ class ExceptionHandler
      */
     public static function getErrorName($code)
     {
-        if (isset(self::$arrErrors[$code]))
-        {
+        if (isset(self::$arrErrors[$code])) {
             return self::$arrErrors[$code];
         }
         return 'unknown error ' . $code;
@@ -102,15 +101,14 @@ class ExceptionHandler
         if (($intType === E_NOTICE) && (
                 (strpos($strFile, 'system/modules/core') !== false)
                 || (strpos($strFile, 'system/helper/functions.php') !== false)
-            ))
-        {
+            )
+        ) {
             return;
         }
 
         if (($intType != E_WARNING)
             && (strpos($strMessage, 'sort(): Array was modified by the user comparison function') !== false)
-        )
-        {
+        ) {
             // @codingStandardsIgnoreStart
             // See:
             //   http://stackoverflow.com/questions/3235387/usort-array-was-modified-by-the-user-comparison-function
@@ -120,7 +118,7 @@ class ExceptionHandler
             return;
         }
 
-        $e = new \ErrorException(
+        $exception = new \ErrorException(
             self::getErrorName($intType) . ': ' . $strMessage,
             0,
             $intType,
@@ -128,22 +126,24 @@ class ExceptionHandler
             $intLine
         );
 
-        if ($intType !== E_NOTICE)
-        {
+        if ($intType !== E_NOTICE) {
             // Log the error.
-            error_log(sprintf("\nPHP %s: %s in %s on line %s\n%s\n",
-                self::getErrorName($intType),
-                $strMessage,
-                $strFile,
-                $intLine,
-                $e->getTraceAsString()));
+            error_log(
+                sprintf(
+                    "\nPHP %s: %s in %s on line %s\n%s\n",
+                    self::getErrorName($intType),
+                    $strMessage,
+                    $strFile,
+                    $intLine,
+                    $exception->getTraceAsString()
+                )
+            );
         }
 
-        self::addException($e);
+        self::addException($exception);
 
         // Exit on severe errors.
-        if (($intType & (E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)))
-        {
+        if (($intType & (E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR))) {
             // Help message will get shown by debugger post mortem.
             exit;
         }
@@ -156,23 +156,26 @@ class ExceptionHandler
      * if "display_errors" is set. Callback to a custom exception handler defined
      * in the application file "config/error.php".
      *
-     * @param \Exception $e The exception.
+     * @param \Exception $exception The exception.
      *
      * @return void
      */
-    public static function handleException($e)
+    public static function handleException($exception)
     {
-        if (($e instanceof \ErrorException) && ($e->getSeverity() !== E_NOTICE))
-        {
-            error_log(sprintf("PHP Fatal error: Uncaught exception '%s' with message '%s' thrown in %s on line %s\n%s",
-                get_class($e),
-                $e->getMessage(),
-                $e->getFile(),
-                $e->getLine(),
-                $e->getTraceAsString()));
+        if (($exception instanceof \ErrorException) && ($exception->getSeverity() !== E_NOTICE)) {
+            error_log(
+                sprintf(
+                    "PHP Fatal error: Uncaught exception '%s' with message '%s' thrown in %s on line %s\n%s",
+                    get_class($exception),
+                    $exception->getMessage(),
+                    $exception->getFile(),
+                    $exception->getLine(),
+                    $exception->getTraceAsString()
+                )
+            );
         }
 
-        self::addException($e);
+        self::addException($exception);
     }
 
     /**

@@ -71,15 +71,12 @@ class HookRegistry
 
         $hooks = self::getHookNames();
 
-        foreach ($hooks as $k)
-        {
-            if (in_array($k, array('outputBackendTemplate', 'outputFrontendTemplate')))
-            {
+        foreach ($hooks as $k) {
+            if (in_array($k, array('outputBackendTemplate', 'outputFrontendTemplate'))) {
                 continue;
             }
 
-            if (!array_key_exists($k, $GLOBALS['TL_HOOKS']))
-            {
+            if (!array_key_exists($k, $GLOBALS['TL_HOOKS'])) {
                 $GLOBALS['TL_HOOKS'][$k] = array();
             }
 
@@ -98,19 +95,19 @@ class HookRegistry
     {
         $hooks = self::getHookNames();
 
-        foreach ($hooks as $k)
-        {
-            if (in_array($k, array('outputBackendTemplate', 'outputFrontendTemplate')))
-            {
+        foreach ($hooks as $k) {
+            if (in_array($k, array('outputBackendTemplate', 'outputFrontendTemplate'))) {
                 continue;
             }
 
             $GLOBALS['TL_HOOKS'][$k][] = array(__CLASS__, 'out_' . $k);
         }
 
-        foreach (array_diff(self::getHookNames(true), $hooks) as $hook)
-        {
-            trigger_error('UNKNOWN HOOK ' . $hook . ' detected. Inspection is not active for this one.', E_USER_WARNING);
+        foreach (array_diff(self::getHookNames(true), $hooks) as $hook) {
+            trigger_error(
+                'UNKNOWN HOOK ' . $hook . ' detected. Inspection is not active for this one.',
+                E_USER_WARNING
+            );
         }
     }
 
@@ -249,30 +246,22 @@ class HookRegistry
     public function __call($method, $params)
     {
         $starting = true;
-        if (substr($method, 0, 3) == 'in_')
-        {
+        if (substr($method, 0, 3) == 'in_') {
             $method = substr($method, 3);
-        }
-        elseif (substr($method, 0, 4) == 'out_')
-        {
+        } elseif (substr($method, 0, 4) == 'out_') {
             $method   = substr($method, 4);
             $starting = false;
         }
 
-        if (in_array($method, self::$hookMap['void']))
-        {
+        if (in_array($method, self::$hookMap['void'])) {
             $this->processHook($method, $params, $starting);
 
             return null;
-        }
-        elseif (isset(self::$hookMap['arg'][$method]))
-        {
+        } elseif (isset(self::$hookMap['arg'][$method])) {
             $this->processHook($method, $params, $starting);
 
             return $params[self::$hookMap['arg'][$method]];
-        }
-        elseif (isset(self::$hookMap['value'][$method]))
-        {
+        } elseif (isset(self::$hookMap['value'][$method])) {
             $this->processHook($method, $params, $starting);
 
             return self::$hookMap['value'][$method];
@@ -292,12 +281,10 @@ class HookRegistry
     {
         $result = array();
 
-        foreach ($list as $hook)
-        {
+        foreach ($list as $hook) {
             if ($hook[0] == __CLASS__
                 || $hook[0] == 'CyberSpectrum\ContaoDebugger\Debugger'
-            )
-            {
+            ) {
                 continue;
             }
             $result[] = $hook[0] . '::' . $hook[1];
@@ -319,31 +306,18 @@ class HookRegistry
     {
         $allowed = self::$hookParamMap[$hookName];
         $result  = array();
-        foreach ($params as $index => $value)
-        {
-            if (in_array($index, $allowed))
-            {
+        foreach ($params as $index => $value) {
+            if (in_array($index, $allowed)) {
                 $result[] = $value;
-            }
-            else
-            {
-                if (is_object($value))
-                {
+            } else {
+                if (is_object($value)) {
                     $result[] = get_class($value);
-                }
-                else
-                {
-                    if (is_string($value))
-                    {
-
+                } else {
+                    if (is_string($value)) {
                         $result[] = gettype($value) . ' ' . strlen($value);
-                    }
-                    elseif(is_array($value))
-                    {
+                    } elseif (is_array($value)) {
                         $result[] = gettype($value) . ' ' . count($value);
-                    }
-                    else
-                    {
+                    } else {
                         $result[] = gettype($value);
                     }
                 }
@@ -366,25 +340,21 @@ class HookRegistry
      */
     protected function processHook($hookName, $params, $starting)
     {
-        if (!$starting)
-        {
-            if (self::$timeCollector->hasStartedMeasure($hookName))
-            {
+        if (!$starting) {
+            if (self::$timeCollector->hasStartedMeasure($hookName)) {
                 self::$timeCollector->stopMeasure($hookName);
             }
             return;
         }
 
-        if (self::$timeCollector && $hookName !== 'initializeSystem')
-        {
-            if (!self::$timeCollector->hasStartedMeasure($hookName))
-            {
+        if (self::$timeCollector && $hookName !== 'initializeSystem') {
+            if (!self::$timeCollector->hasStartedMeasure($hookName)) {
                 self::$timeCollector->startMeasure($hookName, $hookName);
             }
         }
 
-        $e     = new \ErrorException();
-        $stack = $e->getTrace();
+        $exception = new \ErrorException();
+        $stack     = $exception->getTrace();
 
         $information = array(
             'caller' => str_replace(TL_ROOT, 'TL_ROOT', $stack[1]['file']) . '#' . $stack[1]['line'],

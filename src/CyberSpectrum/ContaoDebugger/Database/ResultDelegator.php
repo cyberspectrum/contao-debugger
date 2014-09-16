@@ -3,8 +3,6 @@
 namespace CyberSpectrum\ContaoDebugger\Database;
 
 use Contao\Database\Result;
-use Contao\Database\Statement;
-use CyberSpectrum\ContaoDebugger\Debugger;
 
 /**
  * Delegating class for database statements.
@@ -72,8 +70,7 @@ class ResultDelegator extends Result
     public function invoke($func, $argv)
     {
         $reflection = new \ReflectionClass($this->result);
-        if (!$reflection->hasMethod($func))
-        {
+        if (!$reflection->hasMethod($func)) {
             return null;
         }
 
@@ -100,11 +97,15 @@ class ResultDelegator extends Result
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     public function fetchEach($strKey)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -116,11 +117,15 @@ class ResultDelegator extends Result
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     public function fetchField($intOffset = 0)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -164,11 +169,15 @@ class ResultDelegator extends Result
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     public function row($blnEnumerated = false)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -213,6 +222,8 @@ class ResultDelegator extends Result
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function fetch_field($intOffset)
     {
@@ -221,6 +232,8 @@ class ResultDelegator extends Result
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function data_seek($intIndex)
     {

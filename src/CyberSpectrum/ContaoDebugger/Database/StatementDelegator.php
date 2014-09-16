@@ -14,7 +14,6 @@
 namespace CyberSpectrum\ContaoDebugger\Database;
 
 use Database\Statement;
-use CyberSpectrum\ContaoDebugger\Debugger;
 use Database\Result;
 
 /**
@@ -88,8 +87,7 @@ class StatementDelegator extends Statement
     {
         $result = $this->statement->$key;
 
-        if ($result === null)
-        {
+        if ($result === null) {
             $result = $this->reflectionProperty($key);
         }
 
@@ -108,8 +106,7 @@ class StatementDelegator extends Statement
     public function invoke($func, $argv)
     {
         $reflection = new \ReflectionClass($this->statement);
-        if (!$reflection->hasMethod($func))
-        {
+        if (!$reflection->hasMethod($func)) {
             return null;
         }
 
@@ -128,8 +125,7 @@ class StatementDelegator extends Statement
     protected function reflectionProperty($name)
     {
         $reflection = new \ReflectionClass($this->statement);
-        if (!$reflection->hasProperty($name))
-        {
+        if (!$reflection->hasProperty($name)) {
             return null;
         }
 
@@ -147,12 +143,9 @@ class StatementDelegator extends Statement
      */
     protected function wrapResult($result)
     {
-        if ($result instanceof Result)
-        {
+        if ($result instanceof Result) {
             $result = new ResultDelegator($result);
-        }
-        elseif ($result === $this->statement)
-        {
+        } elseif ($result === $this->statement) {
             $result = $this;
         }
 
@@ -175,23 +168,16 @@ class StatementDelegator extends Statement
         $arrData['timeStop']  = $this->timeStop;
         $arrData['duration']  = ($this->timeStop - $this->timeStart);
 
-        if ($result === null || strncasecmp($this->statement->strQuery, 'SELECT', 6) !== 0)
-        {
-            if (strncasecmp($this->statement->strQuery, 'SHOW', 4) === 0)
-            {
+        if ($result === null || strncasecmp($this->statement->strQuery, 'SELECT', 6) !== 0) {
+            if (strncasecmp($this->statement->strQuery, 'SHOW', 4) === 0) {
                 $arrData['return_count'] = $this->statement->affectedRows;
                 $arrData['returned']     = sprintf('%s row(s) returned', $this->statement->affectedRows);
-            }
-            else
-            {
+            } else {
                 $arrData['affected_count'] = $this->affectedRows;
                 $arrData['affected']       = sprintf('%d row(s) affected', $this->statement->affectedRows);
             }
-        }
-        else
-        {
-            if (($arrExplain = $this->statement->explain()) != false)
-            {
+        } else {
+            if (($arrExplain = $this->statement->explain()) != false) {
                 $arrData['explain'] = $arrExplain;
             }
 
@@ -213,19 +199,27 @@ class StatementDelegator extends Statement
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     public function set($arrParams)
     {
         return $this->wrapResult($this->invoke(__FUNCTION__, func_get_args()));
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     public function limit($intRows, $intOffset = 0)
     {
         return $this->wrapResult($this->invoke(__FUNCTION__, func_get_args()));
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -236,8 +230,7 @@ class StatementDelegator extends Statement
         $result           = $this->wrapResult($this->invoke(__FUNCTION__, func_get_args()));
         $this->timeStop   = microtime(true);
         $this->parameters = func_get_args();
-        if ((count($this->parameters) == 1) && is_array($this->parameters[0]))
-        {
+        if ((count($this->parameters) == 1) && is_array($this->parameters[0])) {
             $this->parameters = $this->parameters[0];
         }
 
@@ -251,8 +244,7 @@ class StatementDelegator extends Statement
      */
     public function query($strQuery = '')
     {
-        if (!$this->realQuery)
-        {
+        if (!$this->realQuery) {
             $this->realQuery = $strQuery;
         }
 
@@ -267,27 +259,39 @@ class StatementDelegator extends Statement
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     protected function replaceWildcards($arrValues)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     protected function escapeParams($arrValues)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
+    // @codingStandardsIgnoreStart - ignore unused parameter.
     protected function debugQuery($objResult = null)
     {
         return $this->invoke(__FUNCTION__, func_get_args());
     }
+    // @codingStandardsIgnoreEnd
 
     /**
      * {@inheritDoc}
@@ -300,6 +304,8 @@ class StatementDelegator extends Statement
     // @codingStandardsIgnoreStart - We can not camel case inherited abstract methods.
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function prepare_query($strQuery)
     {
@@ -308,6 +314,8 @@ class StatementDelegator extends Statement
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function string_escape($strString)
     {
@@ -316,6 +324,8 @@ class StatementDelegator extends Statement
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function limit_query($intRows, $intOffset)
     {
@@ -364,6 +374,8 @@ class StatementDelegator extends Statement
 
     /**
      * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function createResult($resResult, $strQuery)
     {

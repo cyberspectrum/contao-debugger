@@ -73,14 +73,13 @@ class BenchmarkCollector extends DataCollector implements Renderable
      */
     public function profiling()
     {
-        $e        = new \Exception();
-        $trace    = $e->getTrace();
-        $class    = isset($trace[1]['class']) ? $trace[1]['class'] : null;
-        $function = $trace[1]['function'];
-        $method   = ($class ? $class . '::' : '') . $function;
+        $exception = new \Exception();
+        $trace     = $exception->getTrace();
+        $class     = isset($trace[1]['class']) ? $trace[1]['class'] : null;
+        $function  = $trace[1]['function'];
+        $method    = ($class ? $class . '::' : '') . $function;
 
-        if (!isset($this->measures[$method]))
-        {
+        if (!isset($this->measures[$method])) {
             $this->measures[$method] = 0;
         }
 
@@ -111,13 +110,11 @@ class BenchmarkCollector extends DataCollector implements Renderable
         $overhead = 0;
 
         arsort($values);
-        foreach ($values as $method => $measure)
-        {
+        foreach ($values as $method => $measure) {
             if ((substr($method, 0, strlen('CyberSpectrum\ContaoDebugger')) == 'CyberSpectrum\ContaoDebugger')
             || (substr($method, 0, strlen('SqlFormatter')) == 'SqlFormatter')
             || (substr($method, 0, strlen('DebugBar')) == 'DebugBar')
-            )
-            {
+            ) {
                 $overhead += $measure;
                 continue;
             }
@@ -132,8 +129,7 @@ class BenchmarkCollector extends DataCollector implements Renderable
                 'duration_str'   => $this->getDataFormatter()->formatDuration($measure)
             );
 
-            if ($max < $measure)
-            {
+            if ($max < $measure) {
                 $max = $measure;
             }
         }

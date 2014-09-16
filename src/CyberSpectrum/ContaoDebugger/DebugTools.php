@@ -27,14 +27,12 @@ class DebugTools
      */
     public static function argumentList($array)
     {
-        if (!$array)
-        {
+        if (!$array) {
             return null;
         }
 
         $result = array();
-        foreach ($array as $argument)
-        {
+        foreach ($array as $argument) {
             $result[] = var_export($argument, true);
         }
 

@@ -82,8 +82,7 @@ class ContaoSQLCollector extends DataCollector implements Renderable, AssetProvi
             'error_message' => ''
         );
 
-        if ($this->timeCollector !== null)
-        {
+        if ($this->timeCollector !== null) {
             $this->timeCollector->addMeasure($stmt['query'], $stmt['timeStart'], $stmt['timeStop']);
         }
 
@@ -103,8 +102,7 @@ class ContaoSQLCollector extends DataCollector implements Renderable, AssetProvi
             'statements'           => array()
         );
 
-        foreach ($this->statementInformation as $statement)
-        {
+        foreach ($this->statementInformation as $statement) {
             $converted                     = $this->convertStatement($statement);
             $data['statements'][]          = $converted;
             $data['accumulated_duration'] += $converted['duration'];

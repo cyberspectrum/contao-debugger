@@ -35,8 +35,7 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
      */
     public function getDataFormatter()
     {
-        if ($this->dataFormater === null)
-        {
+        if ($this->dataFormater === null) {
             $this->dataFormater = new DataFormatter();
         }
 
@@ -65,8 +64,7 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
     public function collect()
     {
         $data = array();
-        foreach ($this->messages as $i => $var)
-        {
+        foreach ($this->messages as $i => $var) {
             $label = $var['label'];
 
             $label = $i . ' ' . $label;

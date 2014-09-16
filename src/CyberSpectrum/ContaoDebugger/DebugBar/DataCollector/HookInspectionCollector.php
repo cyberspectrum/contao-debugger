@@ -52,15 +52,11 @@ class HookInspectionCollector extends \DebugBar\DataCollector\RequestDataCollect
     {
         $data = array();
         $seq  = array();
-        foreach ($this->messages as $var)
-        {
+        foreach ($this->messages as $var) {
             $label = $var['label'];
-            if (!isset($seq[$label]))
-            {
+            if (!isset($seq[$label])) {
                 $seq[$label] = 0;
-            }
-            else
-            {
+            } else {
                 $seq[$label]++;
             }
 

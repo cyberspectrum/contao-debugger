@@ -25,18 +25,15 @@ class DataFormatter extends \DebugBar\DataFormatter\DataFormatter
      */
     protected function kintLite(&$var, $level = 0)
     {
-        if (is_object($var))
-        {
+        if (is_object($var)) {
             return sprintf('object %s (%s)', get_class($var), spl_object_hash($var));
         }
 
-        if (is_string($var) && strpos($var, '[') !== false)
-        {
+        if (is_string($var) && strpos($var, '[') !== false) {
             $var = str_replace(array('[[', ']]'), array('&#91;&#91;', '&#93;&#93;'), $var);
         }
 
-        if (is_string($var) && strlen($var) > 2048)
-        {
+        if (is_string($var) && strlen($var) > 2048) {
             return sprintf(
                 'string (%s) "%s"...',
                 strlen($var),
