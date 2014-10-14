@@ -177,6 +177,7 @@ class Debugger
     protected static function markDone()
     {
         self::$debuggerDone = true;
+
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
 
         self::getDebugger()->stopCollectors();
