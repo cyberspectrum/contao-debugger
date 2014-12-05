@@ -215,8 +215,12 @@ class Debugger
     protected function isPopup()
     {
         $script = \Environment::get('script');
-        // Not backend main, not frontend index.php and not frontend without anything.
-        return ($script !== 'contao/main.php') && ($script !== 'index.php') && ($script !== '');
+        // Not backend main or index, not frontend index.php and not frontend without anything.
+        return
+            ($script !== 'contao/main.php')
+            && ($script !== 'contao/index.php')
+            && ($script !== 'index.php')
+            && ($script !== '');
     }
 
     /**
