@@ -72,9 +72,9 @@ class ContaoSQLCollector extends DataCollector implements Renderable, AssetProvi
     {
         $newstmt = array(
             'sql'           => $stmt['realquery'],
-            'row_count'     => $stmt['return_count'] ?: $stmt['affected_count'],
+            'row_count'     => isset($stmt['return_count']) ? $stmt['return_count'] : $stmt['affected_count'],
             'prepared_stmt' => $stmt['query'],
-            'params'        => (object)$stmt['params'],
+            'params'        => (object) $stmt['params'],
             'duration'      => $stmt['duration'],
             'duration_str'  => $this->getDataFormatter()->formatDuration($stmt['duration']),
             'is_success'    => true,
