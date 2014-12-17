@@ -14,33 +14,28 @@
 namespace CyberSpectrum\ContaoDebugger\DebugBar\DataFormatter;
 
 /**
- * Special version of formatter.
+ * Special version of formatter to prevent Contao from replacing the insert tags etc..
  *
  * @package CyberSpectrum\ContaoDebugger\DebugBar\DataFormatter
  */
 class DataFormatter extends \DebugBar\DataFormatter\DataFormatter
 {
     /**
-     * {@inheritDoc}
+     * Transforms a PHP variable to a string representation.
+     *
+     * @param mixed $data The data to format.
+     *
+     * @return string.
      */
-    protected function kintLite(&$var, $level = 0)
+    public function formatVar($data)
     {
-        if (is_object($var)) {
-            return sprintf('object %s (%s)', get_class($var), spl_object_hash($var));
-        }
+        $result = parent::formatVar($data);
+        $result = str_replace(
+            array('[[', ']]', '{{', '}}'),
+            array('&#91;&#91;', '&#93;&#93;', '&#123;&#123;', '&#124;&#124;'),
+            $result
+        );
 
-        if (is_string($var) && strpos($var, '[') !== false) {
-            $var = str_replace(array('[[', ']]'), array('&#91;&#91;', '&#93;&#93;'), $var);
-        }
-
-        if (is_string($var) && strlen($var) > 2048) {
-            return sprintf(
-                'string (%s) "%s"...',
-                strlen($var),
-                htmlspecialchars(substr($var, 0, 2048), ENT_NOQUOTES, 'UTF-8', true)
-            );
-        }
-
-        return parent::kintLite($var, $level);
+        return $result;
     }
 }

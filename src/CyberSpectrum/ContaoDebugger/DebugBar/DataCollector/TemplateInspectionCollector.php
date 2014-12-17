@@ -29,7 +29,7 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
     protected $messages = array();
 
     /**
-     * Returns the default data formater.
+     * Returns the default data formatter.
      *
      * @return DataFormatterInterface
      */
@@ -52,7 +52,7 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
     public function addTemplate($template)
     {
         $this->messages[] = array(
-            'message' => $this->getDataFormatter()->formatVar($template->getData()),
+            'message' => $template->getData(),
             'label' => $template->getName(),
             'time' => microtime(true)
         );
@@ -63,13 +63,15 @@ class TemplateInspectionCollector extends \DebugBar\DataCollector\RequestDataCol
      */
     public function collect()
     {
+        $formatter = $this->getDataFormatter();
+
         $data = array();
         foreach ($this->messages as $i => $var) {
             $label = $var['label'];
 
             $label = $i . ' ' . $label;
 
-            $data[$label] = $var['message'];
+            $data[$label] = $formatter->formatVar($var['message']);
         }
 
         return array(
